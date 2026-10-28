@@ -2,10 +2,10 @@
 
 # บันทึกการใช้ prompt
 
-**ชื่อ / รหัสนิสิต:** [รอยืนยัน] / 6632209021
+**ชื่อ / รหัสนิสิต:** วีรภัทร เลิศเจริญวรกุล / 6632209021
 **agent ที่ใช้:** Codex; แยก subagent สำหรับ 5 run และ reviewer
-**โมเดล:** GPT-6 (ตามข้อมูลที่ agent ระบุในผลลัพธ์)
-**แพ็กเกจที่ใช้:** [รอยืนยัน]
+**โมเดล:** GPT-6 (ข้อมูล session/ผล run ระบุเพียงตระกูลนี้; ไม่ทราบชื่อรุ่นย่อย)
+**แพ็กเกจที่ใช้:** ChatGPT Plus (ผู้ใช้ระบุ)
 
 บันทึกทุกคำขอที่ส่งให้ agent ช่อง "ไฟล์ที่ agent อ่าน" คือไฟล์ที่ agent รายงาน หรือที่นิสิตเห็นว่า agent เปิด
 
@@ -20,9 +20,13 @@
 | 7 | คำขอเสริมระหว่าง run | Codex subagents, GPT-6 | แจ้ง Run 1-A, 1-B, 2-a ให้ใช้ JavaScript file I/O แทน terminal/CUA; แจ้ง Run 1-A ให้อ่านเฉพาะ output ของตนก่อนเขียน | Run 1-A: output ตนเองเพิ่ม; Run 1-B และ 2-a: ไม่มีไฟล์เพิ่มจากคำขอนี้ | Run 1-A อ่าน output นอกขอบเขต evidence อย่างเคร่งครัด; ไม่เห็น run อื่น | 3 | คำขอจริงระหว่างงาน บันทึกเพิ่ม ไม่รวมเงียบใน 5 run; AI ประเมิน: ช่วยให้ทำงานต่อได้ แต่ Run 1-A อ่าน output เกินขอบเขต |
 | 8 | ร่างใบงาน/ADR และตรวจ dependency เพิ่ม | Codex agent หลัก, GPT-6 | กรอก 00–05, ร่าง ADR 0002, ตรวจ 5 dependency กับโค้ด, วิเคราะห์บันทึกเพื่อน | ดูรายการอ่านของ agent หลักด้านล่าง | อยู่นอกการทดลอง 5 run แต่ผู้ใช้อนุญาต; ไม่ส่งข้อมูลเพื่อนกลับไปแก้ Part A | 4 | ผลเป็นร่างจาก AI รอผู้เรียนตรวจ; AI ประเมิน: กรอกและตรวจส่วนที่ทำได้; ส่วนของนิสิตยังต้องตรวจ |
 | 9 | ตรวจงานอิสระ | Codex reviewer, GPT-6 | ตรวจ checklist, หลักฐาน, การแยกบริบท, ADR/review, จุดรอยืนยัน และรูปแบบ | ดูรายการไฟล์ reviewer ด้านล่าง | งานตรวจเพิ่มที่ผู้ใช้ขอ | 5 | ผู้ตรวจไม่ใช่ผู้เขียน; AI ประเมิน: พบปัญหาเรื่องหลักฐาน ลำดับ ADR และข้อมูลประชุมได้ชัด |
-
 | 10 | เติมรหัส ให้คะแนน ตรวจ Git และ push ร่าง | Codex agent หลัก, GPT-6 | คำขอผู้ใช้ล่าสุด: ใส่รหัส 6632209021, ให้ AI ประเมินคะแนน, ตรวจทุกไฟล์, ตรวจ origin, commit/push เฉพาะ Assignment | `exercise/00-prompt-log.md`, `exercise/05-reflection.md`; ใช้ Git ตรวจ origin และรายการเปลี่ยน | ผู้ใช้อนุญาตงานเพิ่มและคำสั่ง Git โดยตรง | 4 | AI ประเมิน: ตรวจและเตรียมส่งร่างได้ แต่ข้อมูลประชุมกับการตัดสินใจของนิสิตยังขาด |
 | 11 | ตรวจรอบสุดท้าย | Codex verifier คนละ agent, GPT-6 | ตรวจ 12 ไฟล์, คะแนน/รหัส, ขอบเขต run, ADR/review และจุดรอยืนยัน | ดูรายชื่อไฟล์ final verifier ด้านล่าง | งานตรวจเพิ่มที่ผู้ใช้ขอ | 5 | AI ประเมิน: พบสถานะที่ต้องรอผู้เรียนและไม่พบความขัดแย้งใหม่; ผู้ตรวจไม่แก้ไฟล์ |
+| 12 | แก้ Assignment 5 รอบ 2026-10-29 | Codex, GPT-6 (ไม่ทราบรุ่นย่อย) | ผู้ใช้ให้ชื่อ/แพ็กเกจ, ขอแก้ ADR, คัดลอกบันทึกเพื่อน, ร่าง reflection, ตรวจและ push | ดูรายการอ่านรอบแก้ด้านล่าง | ผู้ใช้อนุญาตการแก้ใบงาน/ADR และอ่านบันทึกเพื่อน; ไม่เปลี่ยนผล 5 run | 4 | AI ประเมิน: ADR/ใบงานละเอียดขึ้น แต่ยังต้องใช้ข้อมูลธุรกิจและมติรวมจริง |
+| 13 | รีวิว ADR หลังแก้ครั้งแรก | Codex reviewer, GPT-6 (ไม่ทราบรุ่นย่อย) | ตรวจ ADR ใหม่แยกจาก Run 3 เดิม | `docs/adr/0002-publish-order-placed-with-rabbitmq.md`, `docs/scenario.md`, `docs/adr/template.md`, `system/online-boutique/src/checkoutservice/main.go`, `system/online-boutique/protos/demo.proto` | ใช่ตามคำขอนี้ | 4 | AI ประเมิน: พบช่องโหว่ retry, ACK และเกณฑ์ capacity ที่นำไปแก้ได้ |
+| 14 | รีวิวหลังแก้จุดที่พบ | Codex reviewer คนเดิม, GPT-6 (ไม่ทราบรุ่นย่อย) | ตรวจ ADR อีกครั้งและเพิ่มผลในรีวิวแยก | `docs/adr/0002-publish-order-placed-with-rabbitmq.md`, `exercise/outputs/3-revised-adr-review.md` | ใช่; อ่านรีวิวของตนเองเพื่ออัปเดต | 4 | AI ประเมิน: ยืนยันสิ่งที่แก้และชี้จุด retry/ผล MailFast ที่ยังค้าง |
+| 15 | ตรวจแก้สุดท้าย | Codex reviewer คนเดิม, GPT-6 (ไม่ทราบรุ่นย่อย) | ตรวจการแก้ retry/reconcile/MailFast และอัปเดตผลรีวิว | `docs/adr/0002-publish-order-placed-with-rabbitmq.md`, `exercise/outputs/3-revised-adr-review.md` | ใช่; อ่านรีวิวของตนเองเพื่ออัปเดต | 5 | AI ประเมิน: ไม่พบข้อบกพร่องที่แก้ได้จากหลักฐานเพิ่ม; คงเงื่อนไขที่ต้องยืนยัน |
+| 16 | ตรวจงานอิสระรอบปิด | Codex reviewer คนละ agent, GPT-6 (ไม่ทราบรุ่นย่อย) | ตรวจ ADR/รีวิว/ใบงาน/บันทึกเพื่อน และความตรงกันก่อน commit | `docs/adr/0002-publish-order-placed-with-rabbitmq.md`, `exercise/00-prompt-log.md`, `exercise/02-write-adr.md`, `exercise/03-ai-review.md`, `exercise/04-review-board.md`, `exercise/05-reflection.md`, `exercise/outputs/3-review.md`, `exercise/outputs/3-revised-adr-review.md`, `docs/scenario.md`, `docs/adr/template.md`, `system/online-boutique/src/checkoutservice/main.go`, `system/online-boutique/protos/demo.proto`, [บันทึกเพื่อน](https://github.com/RATSAPORN/swarch-ai4swarch/blob/main/exercise/04-review-board.en.md) | ใช่ตามคำขอตรวจเพิ่มเติม; ไม่แก้ผล 5 run | 5 | AI ประเมิน: พบจุดกู้คืนเมื่อ storage ล้มเหลวและการตกหล่นของ log; แก้แล้ว |
 
 **R-12 ที่ส่งให้ Run 2-a และ 2-b:** “After an order is placed, Online Boutique must: 1. send the order confirmation email through MailFast, a new external email provider, which replaces the mock emailservice logic; 2. award loyalty points through a new loyaltyservice (to be built); 3. record an ‘order placed’ analytics event for the marketing team. Marketing expects more post-order actions next year (SMS, fraud scoring, a recommendations update).” คัดจาก `docs/scenario.th.md`.
 
@@ -37,3 +41,5 @@
 **เกณฑ์คะแนนข้างต้น:** AI ประเมินจากความถูกต้อง ความครบถ้วน และจำนวนจุดที่ยังต้องแก้; ไม่ใช่คะแนนที่นิสิตให้เอง.
 
 **ไฟล์ที่ final verifier อ่าน:** `AGENTS.md`, `README.md`, `prompts/1-recover-architecture.md`, `prompts/2-write-adr.md`, `prompts/3-review-adr.md`, `docs/scenario.md`, `docs/adr/template.md`, `exercise/00-prompt-log.md`, `exercise/01-recover-architecture.md`, `exercise/02-write-adr.md`, `exercise/03-ai-review.md`, `exercise/04-review-board.md`, `exercise/05-reflection.md`, `exercise/outputs/1A-architecture.md`, `exercise/outputs/1B-architecture.md`, `exercise/outputs/2a-adr.md`, `exercise/outputs/2b-adr.md`, `exercise/outputs/3-review.md`, `docs/adr/0002-publish-order-placed-with-rabbitmq.md`, `system/online-boutique/src/checkoutservice/main.go`, `system/online-boutique/protos/demo.proto`, `system/online-boutique/kubernetes-manifests/frontend.yaml`, `system/online-boutique/kubernetes-manifests/checkoutservice.yaml`, `system/online-boutique/kubernetes-manifests/cartservice.yaml`, `system/online-boutique/kubernetes-manifests/recommendationservice.yaml`, `system/online-boutique/kubernetes-manifests/kustomization.yaml`, `system/online-boutique/kubernetes-manifests/loadgenerator.yaml`.
+
+**ไฟล์ที่ agent หลักอ่านในรอบแก้ 2026-10-29:** `docs/adr/0002-publish-order-placed-with-rabbitmq.md`, `exercise/00-prompt-log.md`, `exercise/02-write-adr.md`, `exercise/03-ai-review.md`, `exercise/04-review-board.md`, `exercise/05-reflection.md`, `exercise/outputs/3-review.md`, `exercise/outputs/3-revised-adr-review.md`, `docs/scenario.md`, `docs/adr/template.md`, `system/online-boutique/src/checkoutservice/main.go`, `system/online-boutique/protos/demo.proto`, และ [บันทึกเพื่อน](https://github.com/RATSAPORN/swarch-ai4swarch/blob/main/exercise/04-review-board.en.md). ไม่อ่าน `docs/review-board/` และไม่ส่งบันทึกเพื่อนกลับไปเปลี่ยนผล 5 run.

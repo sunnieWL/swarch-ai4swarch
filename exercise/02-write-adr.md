@@ -51,8 +51,8 @@ language: Thai
 
 | # | สิ่งที่เปลี่ยนจากร่างของ AI | เหตุผล |
 |---|---|---|
-| 1 | ขยายเงื่อนไขก่อนใช้จริง: ต้องเพิ่ม durable order record/outbox และระบุว่าร่างยังรอผู้เรียนตัดสินใจ | Run b เสนอ outbox แต่ `PlaceOrder` ไม่แสดง order store หรือ commit ที่ใช้ร่วมกัน (`main.go`, `PlaceOrder`) |
-| 2 | ย้ายปัญหาคิว MailFast โต 150 รายการ/s จากข้อเสี่ยงทั่วไปเป็นจุดที่ต้องยืนยัน peak/quota ก่อนใช้จริง | 200 orders/s เกินขีดจำกัด 50 emails/s หากเกิดต่อเนื่อง (`docs/scenario.md`, Quality goals and constraints) |
-| 3 | เพิ่มการทดสอบกรณีจ่ายเงิน/จัดส่งสำเร็จแต่บันทึก order/outbox ล้มเหลว | Run b กล่าวถึงความเสี่ยงแล้ว แต่ยังไม่วัดการกู้คืน; `PlaceOrder` ทำ side effect ก่อนสร้างผล order (`main.go`, `PlaceOrder`) |
+| 1 | เพิ่ม `requestId` และสถานะ order ที่บันทึกก่อนเรียก payment/shipping; commit `ACCEPTED` กับ outbox พร้อมกัน และหยุด retry side effect ที่ผลยังไม่ชัดเพื่อ reconcile | `PlaceOrder` สร้าง UUID ใหม่ทุกครั้งและไม่แสดง order store; `PlaceOrderRequest`/`ChargeRequest` ไม่มี idempotency key (`main.go`, `PlaceOrder`; `demo.proto`, `PlaceOrderRequest`, `ChargeRequest`) |
+| 2 | ระบุ durable queues, persistent messages, publisher confirms, mandatory routing, เงื่อนไข mark `SENT`, การ commit แต้ม/analytics ก่อน ACK และกรณี MailFast ที่ต้อง reconcile แยก | Run b ยังไม่บอกว่าข้อความที่ route ไม่ได้หรือ crash ระหว่าง confirm กับ mark จะถูกจัดการอย่างไร; ต้องรองรับ duplicate โดยเฉพาะแต้ม |
+| 3 | เพิ่มขอบเขต 1 นาทีของแต้มเมื่อ loyalty ล่ม, วิเคราะห์ backlog MailFast รวม retry/พื้นที่เก็บ และทดสอบ crash, timeout, duplicate, broker/consumer ล่ม | `docs/scenario.md` กำหนดแต้มใน 1 นาที, peak 200 orders/s และ MailFast 50 emails/s; เงื่อนไขบางอย่างขัดกันเมื่อระบบล่มนานและต้องให้ธุรกิจตัดสินใจ |
 
-**สถานะ:** ADR ที่ `docs/adr/0002-publish-order-placed-with-rabbitmq.md` เป็นร่างที่ AI ช่วยทำและยังรอผู้เรียนตรวจ แก้ และตัดสินใจเอง ไม่ใช่ฉบับที่ผู้เรียนลงชื่อรับรองแล้ว
+**สถานะ:** AI ช่วยแก้ ADR วันที่ 2026-10-29 หลังผล Run 3 เดิม; ADR ที่ `docs/adr/0002-publish-order-placed-with-rabbitmq.md` เป็นร่างที่ AI ช่วยทำและยังรอผู้เรียนตรวจ แก้ และตัดสินใจเอง ไม่ใช่ฉบับที่ผู้เรียนลงชื่อรับรองแล้ว
