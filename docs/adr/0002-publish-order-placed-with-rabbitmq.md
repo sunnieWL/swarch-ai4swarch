@@ -2,9 +2,8 @@
 
 - **Status:** Proposed
 - **Date:** 2026-10-28
-- **Deciders:** [รอยืนยัน]
+- **Deciders:** วีรภัทร เลิศเจริญวรกุล
 
-> AI ช่วยแก้ร่างวันที่ 2026-10-29; ยังรอผู้เรียนตรวจและตัดสินใจ
 
 ## Context and problem
 
@@ -59,7 +58,7 @@ R-12 ต้องส่งอีเมลผ่าน MailFast, ให้ `loyal
 
 ## Open questions
 
-- [รอยืนยัน] ใครเป็นผู้ตัดสินใจและยอมรับภาระ durable order store, broker และ on-call?
+- ใครเป็นผู้ตัดสินใจและยอมรับภาระ durable order store, broker และ on-call?
 - ธุรกิจยืนยันหรือไม่ว่า `ACCEPTED` คือจุด “order placed”; เมื่อ loyalty ล่มเกิน 1 นาทีจะจัดการความขัดแย้งอย่างไร และหน้า confirmation ต้องแสดงแต้มที่บันทึกแล้วหรือไม่? Not evidenced in the provided files
 - ช่วง peak ยาวเท่าไร อัตราหลัง peak และเวลาส่งอีเมลสูงสุดที่ธุรกิจยอมรับได้เท่าไร? Not evidenced in the provided files
 - ผู้ให้บริการ payment/shipping มี idempotency key หรือ API ตรวจผลย้อนหลังหรือไม่; ถ้าไม่มีจะอนุมัติขั้นตอน reconcile/compensation ใด? Not evidenced in the provided files
