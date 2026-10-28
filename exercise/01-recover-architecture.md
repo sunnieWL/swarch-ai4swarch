@@ -38,15 +38,15 @@ evidence: system/online-boutique/protos/demo.proto, system/online-boutique/kuber
 
 | ผู้เรียก → ผู้ถูกเรียก | หลักฐานที่ AI อ้าง | ยืนยันแล้วหรือไม่ ✅ / ❌ / ❓ | สิ่งที่นิสิตพบ |
 |---|---|---|---|
-| | | | |
-| | | | |
-| | | | |
-| | | | |
-| | | | |
+| `checkoutservice` → `paymentservice` | `system/online-boutique/kubernetes-manifests/checkoutservice.yaml` (`PAYMENT_SERVICE_ADDR`) | ✅ AI ตรวจ | `system/online-boutique/src/checkoutservice/main.go:370` เรียก `NewPaymentServiceClient(...).Charge` |
+| `checkoutservice` → `shippingservice` | `system/online-boutique/kubernetes-manifests/checkoutservice.yaml` (`SHIPPING_SERVICE_ADDR`) | ✅ AI ตรวจ | `system/online-boutique/src/checkoutservice/main.go:387` เรียก `NewShippingServiceClient(...).ShipOrder` |
+| `checkoutservice` → `emailservice` | `system/online-boutique/kubernetes-manifests/checkoutservice.yaml` (`EMAIL_SERVICE_ADDR`) | ✅ AI ตรวจ | `system/online-boutique/src/checkoutservice/main.go:380` เรียก `NewEmailServiceClient(...).SendOrderConfirmation` |
+| `checkoutservice` → `cartservice` | `system/online-boutique/kubernetes-manifests/checkoutservice.yaml` (`CART_SERVICE_ADDR`) | ✅ AI ตรวจ | `system/online-boutique/src/checkoutservice/main.go:325,333` เรียก `GetCart` และ `EmptyCart` |
+| `checkoutservice` → `productcatalogservice` | `system/online-boutique/kubernetes-manifests/checkoutservice.yaml` (`PRODUCT_CATALOG_SERVICE_ADDR`) | ✅ AI ตรวจ | `system/online-boutique/src/checkoutservice/main.go:341` สร้าง `NewProductCatalogServiceClient`; `GetProduct` ใน `prepOrderItems` |
 
-- **สิ่งที่ผิดหรือขาดหายไป** ใน Run B (dependency ที่ไม่มีจริง, dependency ที่ขาดไป, container ที่น่าสงสัย): …
+- **สิ่งที่ผิดหรือขาดหายไป** ใน Run B: AI ยังไม่พบ dependency ผิดใน 5 รายการที่ตรวจ แต่รายการอื่นในตารางอาศัยค่า `*_SERVICE_ADDR` จึงยืนยันเพียงการตั้งค่า ไม่ใช่ว่าทุก call เกิดจริงเสมอ; `shoppingassistantservice` และ `loadgenerator` ถูกแยกเป็น Gaps ตามหลักฐาน deploy ที่ยังไม่ชัดเจน (`frontend.yaml` และ `kustomization.yaml`). ร่างนี้รอผู้เรียนตรวจทานเอง.
 
 ## สะท้อนคิด (ข้อละ 2–3 ประโยค)
 
-1. เปรียบเทียบ A กับ B: agent **ไม่สามารถ**รู้อะไรได้จากไฟล์ `.proto` เพียงไฟล์เดียว และเพราะเหตุใด
-2. ข้อผิดพลาด**ข้อใดข้อหนึ่ง**ที่จะทำให้สมาชิกใหม่ของทีมเข้าใจผิดมากที่สุด หากเผยแพร่แผนภาพนี้โดยไม่ตรวจสอบ
+1. Run A เห็นเพียง 9 service interface ใน `demo.proto` แต่ไม่เห็น caller, จุดเข้าเว็บ, Redis หรือ service ที่ deploy จริง เพราะ `.proto` บอกสัญญาการเรียก ไม่บอกการเชื่อมต่อขณะรัน. Run B ใช้ `frontend.yaml`, `checkoutservice.yaml` และ `cartservice.yaml` จึงเพิ่มเส้นเชื่อมและ Redis ได้ แต่หลายเส้นยังเป็นข้อสรุปจากการตั้งค่า.
+2. จุดเสี่ยงที่สุดคืออ่านทุกเส้นใน Run B ว่าเป็น call ที่เกิดจริง ทั้งที่ตารางหลายรายการอ้างเพียง `*_SERVICE_ADDR` ใน manifest. สมาชิกใหม่อาจไปแก้ service ที่ไม่ใช่ต้นเหตุ จึงควรเปิด source ของ caller ก่อนใช้แผนภาพตัดสินใจ. **ร่างความเห็นจาก AI รอผู้เรียนตรวจทาน**.

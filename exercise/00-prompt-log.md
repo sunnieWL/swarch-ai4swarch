@@ -2,19 +2,38 @@
 
 # บันทึกการใช้ prompt
 
-**ชื่อ / รหัสนิสิต:**
-**agent ที่ใช้:** เช่น GitHub Copilot (Agent mode), Gemini Code Assist, Gemini CLI, Claude Code, Codex, Cursor, Cline: …
-**โมเดล:** …
-**แพ็กเกจที่ใช้:** เช่น Copilot Student, Copilot Free, Gemini รุ่นฟรี: …
+**ชื่อ / รหัสนิสิต:** [รอยืนยัน] / 6632209021
+**agent ที่ใช้:** Codex; แยก subagent สำหรับ 5 run และ reviewer
+**โมเดล:** GPT-6 (ตามข้อมูลที่ agent ระบุในผลลัพธ์)
+**แพ็กเกจที่ใช้:** [รอยืนยัน]
 
 บันทึกทุกคำขอที่ส่งให้ agent ช่อง "ไฟล์ที่ agent อ่าน" คือไฟล์ที่ agent รายงาน หรือที่นิสิตเห็นว่า agent เปิด
 
 | # | งาน / run | agent + โมเดล | ข้อความที่ส่ง (ย่อ) | ไฟล์ที่ agent อ่าน | อยู่ในขอบเขตหลักฐานที่อนุญาตหรือไม่ | มีประโยชน์ (1–5) | หมายเหตุ |
 |---|---|---|---|---|---|---|---|
-| 1 | 1-A | | `prompts/1-…` run A | | | | |
-| 2 | 1-B | | `prompts/1-…` run B | | | | |
-| 3 | 2-a | | `prompts/2-…` run a | | | | |
-| 4 | 2-b | | `prompts/2-…` run b | | | | |
-| 5 | 3 | | `prompts/3-…` | | | | |
-| 6 | | | | | | | |
-| 7 | | | | | | | |
+| 1 | ช่วยจัด Assignment 5 ทั้งชุด | Codex, GPT-6 | คำขอผู้ใช้ในแชตนี้: อ่านกติกา, ทำ 5 run, ร่างใบงาน/ADR, ใช้บันทึกเพื่อน, ตรวจงาน | ดูรายการอ่านของ agent หลักด้านล่าง | งานช่วยเพิ่มเติมนอกการทดลอง 5 run โดยผู้ใช้อนุญาต | 4 | AI ร่างส่วนของนิสิตด้วย; ไม่อ้างว่าเป็นงานที่นิสิตตรวจแล้ว; AI ประเมิน: งานหลักได้ร่างครบ แต่ Part B ยังขาดข้อมูลจริง |
+| 2 | 1-A | Codex subagent, GPT-6 | `prompts/1-recover-architecture.md`; run A; evidence: `system/online-boutique/protos/demo.proto` | `prompts/1-recover-architecture.md`, `system/online-boutique/protos/demo.proto`, `exercise/outputs/1A-architecture.md` (อ่านหลังสร้างเพื่อตรวจ) | ไม่ทั้งหมด: อ่านไฟล์ผลของตนเองเพิ่มหลังสร้างเพื่อยืนยันการเขียน; ไม่มีหลักฐานจาก run อื่น | 4 | session ใหม่ไม่รับบริบท run อื่น; AI ประเมิน: interface ตรงหลักฐาน แต่มีการอ่าน output ของตนเพิ่ม |
+| 3 | 1-B | Codex subagent, GPT-6 | `prompts/1-recover-architecture.md`; run B; evidence: proto และ manifests | `prompts/1-recover-architecture.md`, `system/online-boutique/protos/demo.proto`, manifest 13 ไฟล์ (รายชื่อด้านล่าง) | ใช่ | 4 | session ใหม่ไม่รับบริบท run อื่น; AI ประเมิน: ตารางกับแผนภาพตรงกัน; บางเส้นเป็นการอนุมานจาก config |
+| 4 | 2-a | Codex subagent, GPT-6 | `prompts/2-write-adr.md`; run a; context none; R-12 ภาษาอังกฤษ; language Thai | `prompts/2-write-adr.md`, `docs/adr/template.md` | ใช่; ไม่อ่าน scenario | 4 | session ใหม่ไม่รับบริบท run อื่น; AI ประเมิน: ครบ template และไม่แต่งตัวเลข แต่ยังเป็นร่างกว้างตามบริบทจำกัด |
+| 5 | 2-b | Codex subagent, GPT-6 | `prompts/2-write-adr.md`; run b; context ตามใบงาน; R-12 ภาษาอังกฤษ; language Thai | `prompts/2-write-adr.md`, `docs/adr/template.md`, `docs/scenario.md`, `docs/adr/0001-use-redis-for-cart-storage.md`, `system/online-boutique/src/checkoutservice/main.go` | ใช่ | 4 | session ใหม่ไม่รับบริบท run อื่น; AI ประเมิน: ใช้ตัวเลขและทางเลือกครบ แต่จุด commit/order store ยังไม่ปิด |
+| 6 | 3 | Codex subagent, GPT-6 | `prompts/3-review-adr.md`; ADR 0002; language Thai | `prompts/3-review-adr.md`, `docs/adr/0002-publish-order-placed-with-rabbitmq.md`, `docs/scenario.md` | ใช่ | 4 | รีวิวร่าง AI ที่นิสิตยังไม่รับรอง; ไม่แก้ ADR; AI ประเมิน: พบความเสี่ยงเฉพาะระบบ แต่ตรวจ source นอกขอบเขตไม่ได้ |
+| 7 | คำขอเสริมระหว่าง run | Codex subagents, GPT-6 | แจ้ง Run 1-A, 1-B, 2-a ให้ใช้ JavaScript file I/O แทน terminal/CUA; แจ้ง Run 1-A ให้อ่านเฉพาะ output ของตนก่อนเขียน | Run 1-A: output ตนเองเพิ่ม; Run 1-B และ 2-a: ไม่มีไฟล์เพิ่มจากคำขอนี้ | Run 1-A อ่าน output นอกขอบเขต evidence อย่างเคร่งครัด; ไม่เห็น run อื่น | 3 | คำขอจริงระหว่างงาน บันทึกเพิ่ม ไม่รวมเงียบใน 5 run; AI ประเมิน: ช่วยให้ทำงานต่อได้ แต่ Run 1-A อ่าน output เกินขอบเขต |
+| 8 | ร่างใบงาน/ADR และตรวจ dependency เพิ่ม | Codex agent หลัก, GPT-6 | กรอก 00–05, ร่าง ADR 0002, ตรวจ 5 dependency กับโค้ด, วิเคราะห์บันทึกเพื่อน | ดูรายการอ่านของ agent หลักด้านล่าง | อยู่นอกการทดลอง 5 run แต่ผู้ใช้อนุญาต; ไม่ส่งข้อมูลเพื่อนกลับไปแก้ Part A | 4 | ผลเป็นร่างจาก AI รอผู้เรียนตรวจ; AI ประเมิน: กรอกและตรวจส่วนที่ทำได้; ส่วนของนิสิตยังต้องตรวจ |
+| 9 | ตรวจงานอิสระ | Codex reviewer, GPT-6 | ตรวจ checklist, หลักฐาน, การแยกบริบท, ADR/review, จุดรอยืนยัน และรูปแบบ | ดูรายการไฟล์ reviewer ด้านล่าง | งานตรวจเพิ่มที่ผู้ใช้ขอ | 5 | ผู้ตรวจไม่ใช่ผู้เขียน; AI ประเมิน: พบปัญหาเรื่องหลักฐาน ลำดับ ADR และข้อมูลประชุมได้ชัด |
+
+| 10 | เติมรหัส ให้คะแนน ตรวจ Git และ push ร่าง | Codex agent หลัก, GPT-6 | คำขอผู้ใช้ล่าสุด: ใส่รหัส 6632209021, ให้ AI ประเมินคะแนน, ตรวจทุกไฟล์, ตรวจ origin, commit/push เฉพาะ Assignment | `exercise/00-prompt-log.md`, `exercise/05-reflection.md`; ใช้ Git ตรวจ origin และรายการเปลี่ยน | ผู้ใช้อนุญาตงานเพิ่มและคำสั่ง Git โดยตรง | 4 | AI ประเมิน: ตรวจและเตรียมส่งร่างได้ แต่ข้อมูลประชุมกับการตัดสินใจของนิสิตยังขาด |
+| 11 | ตรวจรอบสุดท้าย | Codex verifier คนละ agent, GPT-6 | ตรวจ 12 ไฟล์, คะแนน/รหัส, ขอบเขต run, ADR/review และจุดรอยืนยัน | ดูรายชื่อไฟล์ final verifier ด้านล่าง | งานตรวจเพิ่มที่ผู้ใช้ขอ | 5 | AI ประเมิน: พบสถานะที่ต้องรอผู้เรียนและไม่พบความขัดแย้งใหม่; ผู้ตรวจไม่แก้ไฟล์ |
+
+**R-12 ที่ส่งให้ Run 2-a และ 2-b:** “After an order is placed, Online Boutique must: 1. send the order confirmation email through MailFast, a new external email provider, which replaces the mock emailservice logic; 2. award loyalty points through a new loyaltyservice (to be built); 3. record an ‘order placed’ analytics event for the marketing team. Marketing expects more post-order actions next year (SMS, fraud scoring, a recommendations update).” คัดจาก `docs/scenario.th.md`.
+
+**manifest 13 ไฟล์ที่ Run 1-B อ่าน:** `system/online-boutique/kubernetes-manifests/README.md`, `kustomization.yaml`, `adservice.yaml`, `cartservice.yaml`, `checkoutservice.yaml`, `currencyservice.yaml`, `emailservice.yaml`, `frontend.yaml`, `loadgenerator.yaml`, `paymentservice.yaml`, `productcatalogservice.yaml`, `recommendationservice.yaml`, `shippingservice.yaml` (ชื่อที่ไม่ใส่ prefix อยู่ใน directory เดียวกัน).
+
+**ไฟล์ที่ agent หลักอ่าน:** `README.md`, `AGENTS.md`, `exercise/00-prompt-log.md` ถึง `exercise/05-reflection.md` (ไฟล์ภาษาไทย), `prompts/1-recover-architecture.md`, `prompts/2-write-adr.md`, `prompts/3-review-adr.md`, `docs/adr/template.md`, `docs/scenario.th.md`, `docs/scenario.md`, `docs/adr/0001-use-redis-for-cart-storage.md`, `system/online-boutique/src/checkoutservice/main.go`, `exercise/outputs/1A-architecture.md`, `1B-architecture.md`, `2a-adr.md`, `2b-adr.md`, `3-review.md` (ชื่อย่ออยู่ใน `exercise/outputs/`), และ [`exercise/04-review-board.en.md` ใน repo เพื่อน](https://github.com/RATSAPORN/swarch-ai4swarch/blob/main/exercise/04-review-board.en.md). การอ่านเพื่อกรอกใบงาน ตรวจเพิ่ม และ Part B ไม่ใช่หลักฐานที่ป้อนให้ run อื่น.
+
+**ไฟล์ที่ reviewer อ่าน:** `README.md`, `AGENTS.md`, `prompts/1-recover-architecture.md`, `prompts/2-write-adr.md`, `prompts/3-review-adr.md`, `docs/adr/template.md`, `exercise/00-prompt-log.md`, `exercise/01-recover-architecture.md`, `exercise/02-write-adr.md`, `exercise/03-ai-review.md`, `exercise/04-review-board.md`, `exercise/05-reflection.md`, `exercise/outputs/1A-architecture.md`, `exercise/outputs/1B-architecture.md`, `exercise/outputs/2a-adr.md`, `exercise/outputs/2b-adr.md`, `exercise/outputs/3-review.md`, `docs/adr/0002-publish-order-placed-with-rabbitmq.md`, `docs/scenario.md`, `docs/scenario.th.md`, `system/online-boutique/protos/demo.proto`, `system/online-boutique/kubernetes-manifests/frontend.yaml`, `system/online-boutique/kubernetes-manifests/checkoutservice.yaml`, `system/online-boutique/kubernetes-manifests/cartservice.yaml`, `system/online-boutique/kubernetes-manifests/recommendationservice.yaml`, `system/online-boutique/kubernetes-manifests/kustomization.yaml`, `system/online-boutique/kubernetes-manifests/loadgenerator.yaml`, `system/online-boutique/src/checkoutservice/main.go`, และ [บันทึกเพื่อน](https://github.com/RATSAPORN/swarch-ai4swarch/blob/main/exercise/04-review-board.en.md).
+
+**หลัง reviewer:** แก้ประโยคตัวเลขใน ADR ให้แยก p95 ปัจจุบันออกจาก peak 200 orders/s โดยไม่เปลี่ยน decision; Run 3 เกิดก่อนการแก้คำนี้. ข้อเสนอเรื่องจุด commit, quota และการกู้คืนยังเปิดอยู่ให้ผู้เรียนตัดสินใจ.
+
+**เกณฑ์คะแนนข้างต้น:** AI ประเมินจากความถูกต้อง ความครบถ้วน และจำนวนจุดที่ยังต้องแก้; ไม่ใช่คะแนนที่นิสิตให้เอง.
+
+**ไฟล์ที่ final verifier อ่าน:** `AGENTS.md`, `README.md`, `prompts/1-recover-architecture.md`, `prompts/2-write-adr.md`, `prompts/3-review-adr.md`, `docs/scenario.md`, `docs/adr/template.md`, `exercise/00-prompt-log.md`, `exercise/01-recover-architecture.md`, `exercise/02-write-adr.md`, `exercise/03-ai-review.md`, `exercise/04-review-board.md`, `exercise/05-reflection.md`, `exercise/outputs/1A-architecture.md`, `exercise/outputs/1B-architecture.md`, `exercise/outputs/2a-adr.md`, `exercise/outputs/2b-adr.md`, `exercise/outputs/3-review.md`, `docs/adr/0002-publish-order-placed-with-rabbitmq.md`, `system/online-boutique/src/checkoutservice/main.go`, `system/online-boutique/protos/demo.proto`, `system/online-boutique/kubernetes-manifests/frontend.yaml`, `system/online-boutique/kubernetes-manifests/checkoutservice.yaml`, `system/online-boutique/kubernetes-manifests/cartservice.yaml`, `system/online-boutique/kubernetes-manifests/recommendationservice.yaml`, `system/online-boutique/kubernetes-manifests/kustomization.yaml`, `system/online-boutique/kubernetes-manifests/loadgenerator.yaml`.

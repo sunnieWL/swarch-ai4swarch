@@ -35,10 +35,10 @@ language: Thai
 
 | เกณฑ์ | Run a | Run b |
 |---|---|---|
-| ใช้ตัวเลขจาก scenario หรือไม่ (latency, ช่วงพีก, ข้อจำกัดของ MailFast) | | |
-| ทางเลือกที่พิจารณา (ระบุ) | | |
-| จัดการแต้มสะสมแบบ "ครั้งเดียวเท่านั้น" และ rate limit ของ MailFast หรือไม่ อย่างไร | | |
-| มีสิ่งที่แต่งขึ้นเองหรือไม่ (ตัวเลข เครื่องมือ หรือข้อเท็จจริงที่ไม่มีใน scenario) | | |
+| ใช้ตัวเลขจาก scenario หรือไม่ (latency, ช่วงพีก, ข้อจำกัดของ MailFast) | ไม่ใช้ เพราะ Run a เห็นเพียง R-12; ตัวเลขอยู่ใน Open questions | ใช้ p95 checkout 500 ms, peak 200 orders/s, MailFast p95 1.5 s และ 50 emails/s จาก `docs/scenario.md` |
+| ทางเลือกที่พิจารณา (ระบุ) | เรียกงานหลังสั่งซื้อตรง; ส่ง `OrderPlaced` ผ่านช่องทางทนทาน | เรียกตรง; transactional outbox + RabbitMQ; งาน asynchronous ใน process |
+| จัดการแต้มสะสมแบบ "ครั้งเดียวเท่านั้น" และ rate limit ของ MailFast หรือไม่ อย่างไร | เสนอ dedup ด้วย `eventId`/business key แต่ไม่รู้ข้อกำหนดครั้งเดียวหรือ rate limit จึงยังไม่กำหนดกลไกจริง | เสนอ `orderId` unique key กับการบันทึกแต้มแบบ atomic; คุม MailFast รวม ≤ 50 emails/s และแยกคิว |
+| มีสิ่งที่แต่งขึ้นเองหรือไม่ (ตัวเลข เครื่องมือ หรือข้อเท็จจริงที่ไม่มีใน scenario) | ไม่พบตัวเลขที่แต่ง; `OrderPlaced` และช่องทางทนทานเป็นข้อเสนอออกแบบ ไม่ใช่ข้อเท็จจริงของระบบ | ไม่พบตัวเลขที่แต่ง; RabbitMQ มาจากทักษะทีมใน scenario ส่วน outbox/order store เป็นข้อเสนอใหม่ ไม่ใช่ของเดิม |
 
 ## รับผิดชอบ ADR ฉบับสุดท้ายของตัวเอง
 
@@ -51,6 +51,8 @@ language: Thai
 
 | # | สิ่งที่เปลี่ยนจากร่างของ AI | เหตุผล |
 |---|---|---|
-| 1 | | |
-| 2 | | |
-| 3 | | |
+| 1 | ขยายเงื่อนไขก่อนใช้จริง: ต้องเพิ่ม durable order record/outbox และระบุว่าร่างยังรอผู้เรียนตัดสินใจ | Run b เสนอ outbox แต่ `PlaceOrder` ไม่แสดง order store หรือ commit ที่ใช้ร่วมกัน (`main.go`, `PlaceOrder`) |
+| 2 | ย้ายปัญหาคิว MailFast โต 150 รายการ/s จากข้อเสี่ยงทั่วไปเป็นจุดที่ต้องยืนยัน peak/quota ก่อนใช้จริง | 200 orders/s เกินขีดจำกัด 50 emails/s หากเกิดต่อเนื่อง (`docs/scenario.md`, Quality goals and constraints) |
+| 3 | เพิ่มการทดสอบกรณีจ่ายเงิน/จัดส่งสำเร็จแต่บันทึก order/outbox ล้มเหลว | Run b กล่าวถึงความเสี่ยงแล้ว แต่ยังไม่วัดการกู้คืน; `PlaceOrder` ทำ side effect ก่อนสร้างผล order (`main.go`, `PlaceOrder`) |
+
+**สถานะ:** ADR ที่ `docs/adr/0002-publish-order-placed-with-rabbitmq.md` เป็นร่างที่ AI ช่วยทำและยังรอผู้เรียนตรวจ แก้ และตัดสินใจเอง ไม่ใช่ฉบับที่ผู้เรียนลงชื่อรับรองแล้ว
